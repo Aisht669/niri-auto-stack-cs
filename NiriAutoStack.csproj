@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- NativeAOT:产出自包含原生二进制,无 .NET 运行时依赖,内存占用最小 -->
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+
+    <!-- 裁剪:去掉用不到的 BCL 部分 -->
+    <TrimMode>full</TrimMode>
+    <StackTraceSupport>false</StackTraceSupport>
+    <EventSourceSupport>false</EventSourceSupport>
+
+    <!-- AOT 编译器层面裁剪。
+         OptimizationPreference=Size  → ILC 的 Os 模式:不为吞吐做激进内联,体积明显变小。
+         IlcScanReflection=false       → 去掉 scanreflection:本程序完全不用反射
+                                       (JSON 和配置解析都是手写的),编译期不必扫描反射元数据。
+         IlcResilient=false            → 去掉 resilient:省掉未处理异常的兜底逻辑。
+                                       这个程序崩了就是崩了,niri 会重启它。
+         IlcFoldIdenticalMethodBodies  → 相同方法体合并成一份。 -->
+    <OptimizationPreference>Size</OptimizationPreference>
+    <IlcScanReflection>false</IlcScanReflection>
+    <IlcResilient>false</IlcResilient>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+    <DebuggerSupport>false</DebuggerSupport>
+
+    <AssemblyName>niri-auto-stack</AssemblyName>
+    <RootNamespace>NiriAutoStack</RootNamespace>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+
+    <!-- 不要生成 .dbg 符号文件,发布目录里只留一个二进制 -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+</Project>

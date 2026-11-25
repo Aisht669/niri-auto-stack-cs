@@ -1,0 +1,6 @@
+bin/
+obj/
+out/
+*.dbg
+*.pdb
+niri-auto-stack
